@@ -39,3 +39,9 @@ class CustomUserRetrieveSerializer(ModelSerializer):
             "created_at",
             "updated_at",
         ]
+
+
+class CustomUserPostListSerializer(ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ["id", "username", "name", "picture"]
