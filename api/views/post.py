@@ -66,3 +66,19 @@ class PostViewSet(ModelViewSet):
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @transaction.atomic
+    def partial_update(self, request, *args, **kwargs):
+
+        instance = self.get_object()
+
+        if user_is_not_author(self.request.user, instance.author):
+            raise PermissionDenied("Only the author can partial update this post.")
+
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.partial = True
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
