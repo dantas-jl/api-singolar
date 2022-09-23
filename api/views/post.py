@@ -11,10 +11,7 @@ from api.serializers.post import (
     PostRetrieveSerializer,
 )
 from api.models.post import Post
-
-
-def user_is_not_author(user, author):
-    return user != author
+from api.utils import user_is_not_author
 
 
 class PostViewSet(ModelViewSet):
@@ -81,7 +78,6 @@ class PostViewSet(ModelViewSet):
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_200_OK)
-
 
     @transaction.atomic
     def destroy(self, request, *args, **kwargs):
