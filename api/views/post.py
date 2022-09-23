@@ -82,3 +82,15 @@ class PostViewSet(ModelViewSet):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+    @transaction.atomic
+    def destroy(self, request, *args, **kwargs):
+
+        instance = self.get_object()
+
+        if user_is_not_author(self.request.user, instance.author):
+            raise PermissionDenied("Only the author can delete this post.")
+
+        instance.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
