@@ -11,7 +11,6 @@ from api.models.post import Post
 
 
 class PostViewSetTestCase(APITestCase):
-    
     def setUp(self):
         custom_user_data = {
             "name": "Test User Token",
@@ -27,25 +26,36 @@ class PostViewSetTestCase(APITestCase):
         self.assertIsInstance(post_view_set, PostViewSet)
 
     def test_cannot_save_post_without_authentication(self):
-        
-        post_data = {"content": "This is a post content!", "picture": File(open(f"{settings.BASE_DIR}/files/avatar.png", "rb"))}
+
+        post_data = {
+            "content": "This is a post content!",
+            "picture": File(open(f"{settings.BASE_DIR}/files/avatar.png", "rb")),
+        }
         response = self.client.post("/api/posts/", post_data)
         self.assertEqual(response.status_code, 401)
         self.assertEqual(
             response.json(),
             {"detail": "Authentication credentials were not provided."},
         )
-    
-    def test_can_custom_user_logged_save_post(self):        
-        
+
+    def test_can_custom_user_logged_save_post(self):
+
         url = "/api/login/"
         request_data = {"username": "usertoken", "password": "my*pass"}
         response = self.client.post(url, request_data)
         acess_token = response.json()["access"]
-        
-        post_data = {"content": "This is a post content!", "picture": File(open(f"{settings.BASE_DIR}/files/avatar.png", "rb"))}
-        response_post = self.client.post("/api/posts/", post_data, format="multipart", **{"HTTP_AUTHORIZATION": f"Bearer {acess_token}"})
-        
+
+        post_data = {
+            "content": "This is a post content!",
+            "picture": File(open(f"{settings.BASE_DIR}/files/avatar.png", "rb")),
+        }
+        response_post = self.client.post(
+            "/api/posts/",
+            post_data,
+            format="multipart",
+            **{"HTTP_AUTHORIZATION": f"Bearer {acess_token}"},
+        )
+
         self.assertEqual(Post.objects.count(), 1)
         self.assertEqual(response_post.status_code, 201)
         self.assertEqual(response_post.json()["content"], post_data["content"])
@@ -53,4 +63,3 @@ class PostViewSetTestCase(APITestCase):
         picture = Post.objects.get(pk=response_post.json()["id"]).picture
         self.assertIn(str(picture), response_post.json()["picture"])
         os.remove(picture.path)
-
