@@ -5,32 +5,32 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.exceptions import PermissionDenied
-from api.serializers.post import (
-    PostCreateOrUpdateSerializer,
-    PostListSerializer,
-    PostRetrieveSerializer,
+from api.serializers.comment import (
+    CommentCreateOrUpdateSerializer,
+    CommentListSerializer,
+    CommentRetrieveSerializer,
 )
-from api.models.post import Post
+from api.models.comment import Comment
 from api.utils import user_is_not_author
 
 
-class PostViewSet(ModelViewSet):
+class CommentViewSet(ModelViewSet):
 
     http_method_names = ["get", "post", "put", "patch", "delete"]
-    queryset = Post.objects.all()
+    queryset = Comment.objects.all()
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
 
         if self.action in ["create", "update", "partial_update"]:
-            return PostCreateOrUpdateSerializer
+            return CommentCreateOrUpdateSerializer
 
         elif self.action in ["list"]:
-            return PostListSerializer
+            return CommentListSerializer
 
         elif self.action in ["retrieve"]:
-            return PostRetrieveSerializer
+            return CommentRetrieveSerializer
 
         return super().get_serializer_class()
 
@@ -40,14 +40,16 @@ class PostViewSet(ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        post_data = {
+        comment_data = {
             "author": self.request.user,
             **serializer.validated_data,
         }
 
-        post = Post.objects.create(**post_data)
+        comment = Comment.objects.create(**comment_data)
 
-        return Response(self.get_serializer(post).data, status=status.HTTP_201_CREATED)
+        return Response(
+            self.get_serializer(comment).data, status=status.HTTP_201_CREATED
+        )
 
     @transaction.atomic
     def update(self, request, *args, **kwargs):
@@ -55,7 +57,7 @@ class PostViewSet(ModelViewSet):
         instance = self.get_object()
 
         if user_is_not_author(self.request.user, instance.author):
-            raise PermissionDenied("Only the author can update this post.")
+            raise PermissionDenied("Only the author can update this comment.")
 
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -70,7 +72,7 @@ class PostViewSet(ModelViewSet):
         instance = self.get_object()
 
         if user_is_not_author(self.request.user, instance.author):
-            raise PermissionDenied("Only the author can partial update this post.")
+            raise PermissionDenied("Only the author can partial update this comment.")
 
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -85,7 +87,7 @@ class PostViewSet(ModelViewSet):
         instance = self.get_object()
 
         if user_is_not_author(self.request.user, instance.author):
-            raise PermissionDenied("Only the author can delete this post.")
+            raise PermissionDenied("Only the author can delete this comment.")
 
         instance.delete()
 

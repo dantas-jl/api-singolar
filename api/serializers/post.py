@@ -1,6 +1,6 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, CharField
 from api.models.post import Post
-from users.serializers import CustomUserPostListSerializer, CustomUserRetrieveSerializer
+from users.serializers import CustomUserShortSerializer, CustomUserRetrieveSerializer
 
 
 class PostCreateOrUpdateSerializer(ModelSerializer):
@@ -12,7 +12,7 @@ class PostCreateOrUpdateSerializer(ModelSerializer):
 
 class PostListSerializer(ModelSerializer):
 
-    author = CustomUserPostListSerializer()
+    author = CustomUserShortSerializer()
 
     class Meta:
         model = Post
@@ -26,3 +26,12 @@ class PostRetrieveSerializer(ModelSerializer):
     class Meta:
         model = Post
         fields = "__all__"
+
+
+class PostCommentListSerializer(ModelSerializer):
+
+    author = CharField(source="author.name")
+
+    class Meta:
+        model = Post
+        fields = ["id", "author", "content", "picture"]

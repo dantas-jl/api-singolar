@@ -41,7 +41,7 @@ class CustomUserRetrieveSerializer(ModelSerializer):
         ]
 
 
-class CustomUserPostListSerializer(ModelSerializer):
+class CustomUserShortSerializer(ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ["id", "username", "name", "picture"]
