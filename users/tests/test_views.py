@@ -144,3 +144,23 @@ class CustomUserViewSet(APITestCase):
         self.assertEqual(response_retrieve.status_code, 200)
         self.assertEqual(custom_user.id, response_retrieve.json()["id"])
         self.assertEqual(9, len(response_retrieve.json()))
+
+
+class TokenViewSet(APITestCase):
+    def setUp(self):
+        custom_user_data = {
+            "name": "Test User Token",
+            "birth": "2018-08-01",
+            "email": "user@email.com",
+            "username": "usertoken",
+            "password": "my*pass",
+        }
+        self.custom_user = CustomUser.objects.create_user(**custom_user_data)
+
+    def test_can_obtain_acess_and_refresh_token(self):
+        url = "/api/login/"
+        request_data = {"username": "usertoken", "password": "my*pass"}
+        response = self.client.post(url, request_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("access", response.json().keys())
+        self.assertIn("refresh", response.json().keys())
