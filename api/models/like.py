@@ -12,9 +12,6 @@ class Like(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return f"{self.author.name} like in comment: {self.comment}"
-
     class Meta:
         db_table = "like"
         unique_together = ("author", "comment")

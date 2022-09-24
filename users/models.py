@@ -24,6 +24,8 @@ class CustomUser(AbstractUser):
         verbose_name = "User"
         verbose_name_plural = "Users"
 
-    def __str__(self):
-
-        return f"{self.id}, {self.username}, {self.email}, {self.name}, {self.bio}, {self.birth}, {self.picture}, {self.created_at}, {self.updated_at}"
+    def delete(self, *args, **kwargs):
+        
+        if self.picture:
+            self.picture.delete()
+        super().delete(*args, **kwargs)
