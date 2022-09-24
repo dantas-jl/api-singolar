@@ -1,4 +1,6 @@
 from django.db import transaction
+from django.shortcuts import get_object_or_404
+from rest_framework.decorators import action
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import status
 from rest_framework.response import Response
@@ -10,6 +12,7 @@ from api.serializers.comment import (
     CommentListSerializer,
     CommentRetrieveSerializer,
 )
+from api.serializers.like import LikeListSerializer
 from api.models.comment import Comment
 from api.utils import user_is_not_author
 
@@ -92,3 +95,20 @@ class CommentViewSet(ModelViewSet):
         instance.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @transaction.atomic
+    @action(detail=True, methods=["get"], url_path="likes(?:/(?P<like_pk>[^/.]+))?")
+    def likes(self, request, pk=None, like_pk=None):
+
+        instance = self.get_object()
+
+        if like_pk is None:
+            likes = instance.likes.all()
+            return Response(
+                LikeListSerializer(likes, many=True).data,
+                status=status.HTTP_200_OK,
+            )
+
+        else:
+            like = get_object_or_404(instance.likes, pk=like_pk)
+            return Response(LikeListSerializer(like).data, status=status.HTTP_200_OK)
