@@ -1,6 +1,8 @@
 from django.db import transaction
+from django.shortcuts import get_object_or_404
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -10,6 +12,7 @@ from api.serializers.post import (
     PostListSerializer,
     PostRetrieveSerializer,
 )
+from api.serializers.comment import CommentListSerializer, CommentRetrieveSerializer
 from api.models.post import Post
 from api.utils import user_is_not_author
 
@@ -90,3 +93,24 @@ class PostViewSet(ModelViewSet):
         instance.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @transaction.atomic
+    @action(
+        detail=True, methods=["get"], url_path="comments(?:/(?P<comment_pk>[^/.]+))?"
+    )
+    def comments(self, request, pk=None, comment_pk=None):
+
+        instance = self.get_object()
+
+        if comment_pk is None:
+            comments = instance.comments.all()
+            return Response(
+                CommentListSerializer(comments, many=True).data,
+                status=status.HTTP_200_OK,
+            )
+
+        else:
+            comment = get_object_or_404(instance.comments, pk=comment_pk)
+            return Response(
+                CommentRetrieveSerializer(comment).data, status=status.HTTP_200_OK
+            )
