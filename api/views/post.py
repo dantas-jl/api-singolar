@@ -12,9 +12,10 @@ from api.serializers.post import (
     PostListSerializer,
     PostRetrieveSerializer,
 )
-from api.serializers.comment import CommentListSerializer, CommentRetrieveSerializer
 from api.models.post import Post
 from api.utils import user_is_not_author
+from api.serializers.comment import CommentListSerializer, CommentRetrieveSerializer
+from api.serializers.like import LikeListSerializer
 
 
 class PostViewSet(ModelViewSet):
@@ -114,3 +115,30 @@ class PostViewSet(ModelViewSet):
             return Response(
                 CommentRetrieveSerializer(comment).data, status=status.HTTP_200_OK
             )
+
+    @transaction.atomic
+    @action(
+        detail=True,
+        methods=["get"],
+        url_path=(
+            "comments(?:/(?P<comment_pk>[^/.]+))?"
+            "(?:/(likes))(?:/(?P<like_pk>[^/.]+))?"
+        ),
+    )
+    def comments_likes(self, request, pk=None, comment_pk=None, like_pk=None):
+
+        instance = self.get_object()
+
+        if comment_pk is not None and like_pk is None:
+
+            comment = get_object_or_404(instance.comments, pk=comment_pk)
+            likes = comment.likes.all()
+            return Response(
+                LikeListSerializer(likes, many=True).data,
+                status=status.HTTP_200_OK,
+            )
+
+        elif comment_pk is not None and like_pk is not None:
+            comment = get_object_or_404(instance.comments, pk=comment_pk)
+            like = get_object_or_404(comment.likes, pk=like_pk)
+            return Response(LikeListSerializer(like).data, status=status.HTTP_200_OK)
