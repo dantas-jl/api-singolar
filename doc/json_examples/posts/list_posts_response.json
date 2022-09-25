@@ -1,0 +1,24 @@
+[
+    {
+        "id": 2,
+        "author": {
+            "id": 1,
+            "username": "singolar_username",
+            "name": "Singolar Company",
+            "picture": "https://dantasjl.pythonanywhere.com/media/user_pictures/avatar.png"
+        },
+        "content": "Hello world, this is a post too!",
+        "picture": null
+    },
+    {
+        "id": 1,
+        "author": {
+            "id": 1,
+            "username": "singolar_username",
+            "name": "Singolar Company",
+            "picture": "https://dantasjl.pythonanywhere.com/media/user_pictures/avatar.png"
+        },
+        "content": "Hello world, this is a post!",
+        "picture": null
+    }
+]
