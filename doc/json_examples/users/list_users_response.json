@@ -1,0 +1,9 @@
+[
+    {
+        "id": 1,
+        "username": "singolar_username",
+        "name": "Singolar Company",
+        "bio": "Hello world!",
+        "picture": "https://dantasjl.pythonanywhere.com/media/user_pictures/avatar.png"
+    }
+]

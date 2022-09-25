@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "author": {
+            "id": 1,
+            "username": "singolar_username",
+            "name": "Singolar Company",
+            "picture": "https://dantasjl.pythonanywhere.com/media/user_pictures/avatar.png"
+        },
+        "comment": {
+            "id": 1,
+            "author": "Singolar Company",
+            "post": {
+                "id": 2,
+                "author": "Singolar Company",
+                "content": "Hello world, this is a post too!",
+                "picture": null
+            },
+            "content": "This is a comment!"
+        }
+    }
+]

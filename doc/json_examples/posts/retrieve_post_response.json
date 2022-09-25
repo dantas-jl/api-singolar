@@ -1,0 +1,18 @@
+{
+    "id": 2,
+    "author": {
+        "id": 1,
+        "name": "Singolar Company",
+        "bio": "Hello world!",
+        "picture": "https://dantasjl.pythonanywhere.com/media/user_pictures/avatar.png",
+        "birth": "2010-10-10",
+        "email": "singolar_@singolar.com",
+        "username": "singolar_username",
+        "created_at": "2022-09-24T18:04:21.162910-03:00",
+        "updated_at": "2022-09-24T18:04:21.162946-03:00"
+    },
+    "content": "Hello world, this is a post too!",
+    "picture": null,
+    "created_at": "2022-09-24T20:30:24.392593-03:00",
+    "updated_at": "2022-09-24T20:30:24.392642-03:00"
+}

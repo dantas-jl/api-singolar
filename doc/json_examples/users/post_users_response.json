@@ -1,0 +1,9 @@
+{
+    "id": 3,
+    "name": "Singolar Company II",
+    "bio": "Hello world!",
+    "picture": "https://dantasjl.pythonanywhere.com/media/user_pictures/avatar.png",
+    "birth": "2010-10-10",
+    "email": "singolar_@singolar.com",
+    "username": "singolar_two"
+}
